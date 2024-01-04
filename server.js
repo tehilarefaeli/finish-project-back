@@ -1,3 +1,4 @@
+const { mysqlConnection } = require('./server/sql/sql');
 const express = require('express');
 const app = express();
 const port = 3000;
@@ -35,3 +36,13 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
+
+mysqlConnection.connect((err) => {
+  if (!err)
+      console.log('Connection Established Successfully');
+  else
+      console.log('Connection Failed!' + JSON.stringify(err, undefined, 2));
+});
+
+
+
