@@ -5,3 +5,4 @@ function putreq(data, id) {
     const values = [data, id];
     return connection.query(script, values);
 };
+
