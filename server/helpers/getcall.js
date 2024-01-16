@@ -1,4 +1,4 @@
-const { mysqlConnection } = require('./server/sql/sql');
+/*const { mysqlConnection } = require('./server/sql/sql');
 
 function getreq(data) {
     const script = 'SELECT * FROM users WHERE name = ?';
@@ -6,4 +6,4 @@ function getreq(data) {
     connection.query(script, value);
 };
 
-
+*/
