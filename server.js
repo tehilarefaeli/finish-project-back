@@ -1,7 +1,13 @@
 const { mysqlConnection } = require('./server/sql/sql');
 const express = require('express');
 const app = express();
-const port = 3000;
+const port = 8080;
+const RecipiesRouter = require('./server/routers/RecipiesRouter');
+app.use('/recipies', RecipiesRouter);
+
+const UserRouter = require('./server/routers/UserRouter');
+app.use('/users', UserRouter);
+
 //const cors = require('cors');
 //const bodyparser = require('body-parser');
 
@@ -9,6 +15,8 @@ const port = 3000;
 
 
 //app.use(cors());
+
+
 
 
 
