@@ -8,21 +8,17 @@ const mysql = require('node-mysql');
 
 const userRouter = Router();
 
- userRouter.get('/getUsersExist/:email/:password', (req, res) => {
+userRouter.get('/getUsersExist/:email/:password', (req, res) => {
     const email = req.params.email;
     const password = req.params.password;
     const sql = `SELECT * FROM mydb.users WHERE email = '${email}'AND password = '${password}';`;
- mysqlConnection.query(sql,[email,password], (err, rows) => {
-    if (!err)
-        res.send(rows);
-    else if(rows === undefined)
-    {
-        res.status(404).send('I dont see this user')
-    }
-    else
-        res.status(500).send('Error fetching users');
-        //console.log(err);
-   })
+    mysqlConnection.query(sql, [email, password], (err, rows) => {
+        if (!err)
+            res.send(rows);
+
+        else
+            console.log(err);
+    })
 })
 
 userRouter.post('/RegisterUser', (req, res) => {

@@ -1,3 +1,5 @@
+const { postreq } = require('./server/helpers/postcall');
+const { getreq } = require('./server/helpers/getcall');
 const { mysqlConnection } = require('./server/sql/sql');
 const express = require('express');
 const app = express();
@@ -47,10 +49,31 @@ app.listen(port, () => {
 
 mysqlConnection.connect((err) => {
   if (!err)
-      console.log('Connection Established Successfully');
+    console.log('Connection Established Successfully');
   else
-      console.log('Connection Failed!' + JSON.stringify(err, undefined, 2));
+    console.log('Connection Failed!' + JSON.stringify(err, undefined, 2));
 });
+
+
+
+/*get((data) => {
+
+  console.log('הנתונים שנשלפו:', data);
+}
+);
+
+const user = getreq('John Doe');
+console.log(user);
+
+const result = post(123, '2@gmail.com', 123, 44, moshe
+);
+
+if (result.affectedRows > 0) {
+  console.log('הרשומה נוספה בהצלחה');
+} else {
+  console.log('הוספת הרשומה נכשלה');
+}*/
+
 
 
 
