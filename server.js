@@ -4,20 +4,28 @@ const { mysqlConnection } = require('./server/sql/sql');
 const express = require('express');
 const app = express();
 const port = 8080;
+
+const cors = require('cors');
+const bodyparser = require('body-parser');
+
+app.use(bodyparser.json());
+
+
+app.use(cors());
+
+app.use((req, res, next) => {
+  // Allow CORS requests from http://localhost:3000
+  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.header('Access-Control-Allow-Methods', 'POST');
+  next();
+});
+
+
 const RecipiesRouter = require('./server/routers/RecipiesRouter');
-app.use('/recipies', RecipiesRouter);
+app.use('/recipes', RecipiesRouter);
 
 const UserRouter = require('./server/routers/UserRouter');
 app.use('/users', UserRouter);
-
-//const cors = require('cors');
-//const bodyparser = require('body-parser');
-
-//app.use(bodyparser.json());
-
-
-//app.use(cors());
-
 
 
 
