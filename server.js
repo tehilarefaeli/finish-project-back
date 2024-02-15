@@ -27,6 +27,9 @@ app.use('/recipes', RecipiesRouter);
 const UserRouter = require('./server/routers/UserRouter');
 app.use('/users', UserRouter);
 
+const ProductRouter = require('./server/routers/ProductRouter');
+app.use('/products', ProductRouter);
+
 
 
 
