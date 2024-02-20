@@ -22,28 +22,30 @@ RecipiesRouter.post('/rating', (req, res) => {
 
 RecipiesRouter.get('/all', (req, res) => {
 
-   const numOfProductFields = 15;
-
-   const selectFields = Array.from({ length: numOfProductFields }, (_, i) => `
-       (SELECT pm.product_name FROM products_mapping pm WHERE pm.product_id = p.product_id_${i + 1}) AS product_name_${i + 1} `).join(', ');
-
-   const query = `
-      SELECT r.recipe_id, r.category_id, r.recipe_name, r.recipe_rating, r.recipe_prepare,
-             r.rating_count, r.recipe_img,
-             ${selectFields}
-      FROM recipes r
-      LEFT JOIN recipes_product p ON r.recipe_id = p.recipe_id
-      WHERE ${getNotNullFieldsConditions('p', numOfProductFields)};
-   `;
-
-   function getNotNullFieldsConditions(tableName, numOfFields) {
-      const conditions = Array.from({ length: numOfFields }, (_, i) => `
-         ${tableName}.product_id_${i + 1} IS NOT NULL
-      `);
-      return conditions.join(' OR ');
-   }
 
 
+   // const numOfProductFields = 15;
+
+   // const selectFields = Array.from({ length: numOfProductFields }, (_, i) => `
+   //     (SELECT pm.product_name FROM products_mapping pm WHERE pm.product_id = p.product_id_${i + 1}) AS product_name_${i + 1} `).join(', ');
+
+   // const query = `
+   //    SELECT r.recipe_id, r.category_id, r.recipe_name, r.recipe_rating, r.recipe_prepare,
+   //           r.rating_count, r.recipe_img,
+   //           ${selectFields}
+   //    FROM recipes r
+   //    LEFT JOIN recipes_product p ON r.recipe_id = p.recipe_id
+   //    WHERE ${getNotNullFieldsConditions('p', numOfProductFields)};
+   // `;
+
+   // function getNotNullFieldsConditions(tableName, numOfFields) {
+   //    const conditions = Array.from({ length: numOfFields }, (_, i) => `
+   //       ${tableName}.product_id_${i + 1} IS NOT NULL
+   //    `);
+   //    return conditions.join(' OR ');
+   // }
+
+const query = `SELECT * FROM recipes`
 
    
 
