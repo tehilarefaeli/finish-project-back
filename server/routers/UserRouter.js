@@ -21,7 +21,7 @@ userRouter.post("/register", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
   const age = req.body.age;
-  const name = req.body.nickname;
+  const name = req.body.name;
 
   const sql = `INSERT INTO users (email, password, age, name) VALUES (?, ?, ?, ?);`;
   mysqlConnection.query(sql, [email, password, age, name], (err) => {

@@ -81,7 +81,13 @@ RecipiesRouter.get("/all", (req, res) => {
   //    return conditions.join(' OR ');
   // }
 
-  const query = `SELECT * FROM recipes`;
+  const query = `
+  SELECT r.*, GROUP_CONCAT(p.product_name) as ingridients
+  FROM recipes r
+  LEFT JOIN recipe_products rp ON r.recipe_id = rp.recipe_id
+  LEFT JOIN products_mapping p ON rp.product_id = p.product_id
+  GROUP BY r.recipe_id
+  `;
 
   mysqlConnection.query(query, (err, rows) => {
     if (!err) {
@@ -104,10 +110,10 @@ RecipiesRouter.get("/all", (req, res) => {
         return filteredRows;
       };
 
+      console.log(rows[0])
       // Applying the filter to each recipe in the array
       const filteredRecipes = rows.map(filterProductNames);
 
-      console.log(filteredRecipes);
       res.send(filteredRecipes);
     } else console.log(err);
   });
