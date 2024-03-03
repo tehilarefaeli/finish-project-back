@@ -6,27 +6,27 @@ const RecipiesRouter = Router();
 
 RecipiesRouter.post("/rating", (req, res) => {
   // Extract request data
-const { newRating, recipeid } = req.body;
+  const { newRating, recipeid } = req.body;
 
-// Corrected SQL query
-//const sql = `UPDATE mydb.recipes SET recipe_rating = ?, rating_count = rating_count + 1 WHERE recipe_id = ?`;
-const sql = `
+  // Corrected SQL query
+  //const sql = `UPDATE mydb.recipes SET recipe_rating = ?, rating_count = rating_count + 1 WHERE recipe_id = ?`;
+  const sql = `
   UPDATE mydb.recipes
   SET
     recipe_rating = (recipe_rating * rating_count + ?) / (rating_count + 1),
     rating_count = rating_count + 1
   WHERE recipe_id = ?;
 `;
-// Execute query with placeholders
-mysqlConnection.query(sql, [newRating, recipeid], (err) => {
-  // Handle response
-  if (!err) {
-    res.status(200).send("Updated rating successfully");
-  } else {
-    console.error(err);
-    res.status(500).send("Failed to update rating");
-  }
-});
+  // Execute query with placeholders
+  mysqlConnection.query(sql, [newRating, recipeid], (err) => {
+    // Handle response
+    if (!err) {
+      res.status(200).send("Updated rating successfully");
+    } else {
+      console.error(err);
+      res.status(500).send("Failed to update rating");
+    }
+  });
 });
 
 RecipiesRouter.get("/likes/:email", (req, res) => {
