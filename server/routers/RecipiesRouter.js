@@ -130,4 +130,35 @@ RecipiesRouter.get("/all", (req, res) => {
   });
 });
 
+RecipiesRouter.get('/recipeByParams/:productsInRecipeIds/:productsNotInRecipeIds', (req, res) => {
+  const productsInRecipeIds = req.params.productsInRecipeIds.split(','); // Assuming product IDs are comma-separated
+  const productsNotInRecipeIds = req.params.productsNotInRecipeIds.split(','); // Assuming product IDs are comma-separated
+
+  // Dynamically construct the SQL query
+  const productIdsCondition = productsInRecipeIds.map(id => `product_id = ${id}`).join(' OR ');
+  const productNotIdsCondition = productsNotInRecipeIds.map(id => `product_id <> ${id}`).join(' AND ');
+  let query = `
+  SELECT recipe_id
+  FROM recipe_products
+  WHERE product_id ==(${productIdsCondition})
+  AND recipe_id NOT IN (
+      SELECT recipe_id
+      FROM recipe_products
+      WHERE product_id ==(${productNotIdsCondition})
+  )
+`;
+
+// Execute the query using your database connection
+// Assuming you're using MySQL
+mysqlConnection.query(query, (error, results, fields) => {
+  if (error) {
+      console.error('Error fetching recipes:', error);
+  } else {
+    res.send(results);
+      console.log('Recipes:', results);
+  }
+ });
+});
+
+
 module.exports = RecipiesRouter;

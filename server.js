@@ -14,7 +14,6 @@ app.use(bodyparser.json());
 app.use(cors());
 
 app.use((req, res, next) => {
-  // Allow CORS requests from http://localhost:3000
   res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
   res.header('Access-Control-Allow-Methods', 'POST');
   next();
