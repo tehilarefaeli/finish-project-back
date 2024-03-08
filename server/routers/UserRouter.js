@@ -23,6 +23,10 @@ userRouter.post("/register", (req, res) => {
   const age = req.body.age;
   const name = req.body.name;
 
+  if (!name || !age || !email || !password) {
+    return res.status(400).send({ message: 'Please fill all inputs' });
+  }
+
   const sql = `INSERT INTO users (email, password, age, name) VALUES (?, ?, ?, ?);`;
   mysqlConnection.query(sql, [email, password, age, name], (err) => {
     if (!err) res.send("POST User details successfully");
