@@ -29,6 +29,69 @@ RecipiesRouter.post("/rating", (req, res) => {
   });
 });
 
+RecipiesRouter.post('/addrecipe', (req, res) => {
+  const { category_id, recipe_name,recipe_rating, recipe_prepare,rating_count, recipe_img } = req.body;
+  
+
+  const sql = 'INSERT INTO recipes (category_id, recipe_name,recipe_rating, recipe_prepare,rating_count, recipe_img) VALUES (?, ?, ?, ?, ?, ?)';
+  const values = [parseInt(category_id), recipe_name,recipe_rating, recipe_prepare,rating_count, recipe_img];
+
+  mysqlConnection.query(sql, values, (err, result) => {
+      if (err) {
+          console.error('Error adding recipe: ' + err.message);
+          res.status(500).json({ error: 'Error adding recipe' });
+          return;
+      }
+      console.log('Added recipe with ID: ' + result.insertId);
+      res.json({ message: 'Recipe added successfully' });
+  });
+});
+
+RecipiesRouter.delete('/deleterecipe/:recipeName', (req, res) => {
+  const recipeName = req.params.recipeName;
+
+  // Delete the recipe from the database based on recipe_name
+  const sql = 'DELETE FROM recipes WHERE recipe_name = ?';
+
+  mysqlConnection.query(sql, [recipeName], (err, result) => {
+      if (err) {
+          console.error('Error deleting recipe: ' + err.message);
+          res.status(500).json({ error: 'Error deleting recipe' });
+          return;
+      }
+      console.log('Deleted recipe with name: ' + recipeName);
+      res.json({ message: 'Recipe deleted successfully' });
+  });
+});
+
+RecipiesRouter.put('/updaterecipe/:recipename', (req, res) => {
+  const recipeName = req.params.recipename; // Use recipename to match with the route parameter
+  const { category_id, recipe_name, recipe_rating, recipe_prepare, rating_count, recipe_img } = req.body;
+
+  const sql = `UPDATE recipes 
+               SET category_id=?, 
+                   recipe_name=?, 
+                   recipe_rating=?, 
+                   recipe_prepare=?, 
+                   rating_count=?, 
+                   recipe_img=? 
+               WHERE recipe_name=?`; // Use recipe_name to match with the column in the database
+
+  const values = [parseInt(category_id), recipe_name, recipe_rating, recipe_prepare, rating_count, recipe_img, recipeName]; // Pass recipeName as the last value
+
+  mysqlConnection.query(sql, values, (err, result) => {
+    if (err) {
+      console.error('Error updating recipe: ' + err.message);
+      res.status(500).json({ error: 'Error updating recipe' });
+      return;
+    }
+    console.log('Updated recipe with name: ' + recipeName);
+    res.json({ message: 'Recipe updated successfully' });
+  });
+});
+
+
+
 RecipiesRouter.get("/likes/:email", (req, res) => {
   const email = req.params.email;
 
@@ -133,31 +196,39 @@ RecipiesRouter.get("/all", (req, res) => {
 RecipiesRouter.get('/recipeByParams/:productsInRecipeIds/:productsNotInRecipeIds', (req, res) => {
   const productsInRecipeIds = req.params.productsInRecipeIds.split(','); // Assuming product IDs are comma-separated
   const productsNotInRecipeIds = req.params.productsNotInRecipeIds.split(','); // Assuming product IDs are comma-separated
+  let recipesContains;
+  let recipesNotContains;
 
-  // Dynamically construct the SQL query
-  const productIdsCondition = productsInRecipeIds.map(id => `product_id = ${id}`).join(' OR ');
-  const productNotIdsCondition = productsNotInRecipeIds.map(id => `product_id <> ${id}`).join(' AND ');
   let query = `
   SELECT recipe_id
   FROM recipe_products
-  WHERE product_id ==(${productIdsCondition})
-  AND recipe_id NOT IN (
-      SELECT recipe_id
-      FROM recipe_products
-      WHERE product_id ==(${productNotIdsCondition})
-  )
-`;
+  WHERE product_id IN (`;
 
-// Execute the query using your database connection
-// Assuming you're using MySQL
+for (const productId of productsInRecipeIds) {
+  query += `${productId},`;
+}
+
+query = query.slice(0, -1);
+query += ')';
+query += ' GROUP BY recipe_id';
+
 mysqlConnection.query(query, (error, results, fields) => {
   if (error) {
-      console.error('Error fetching recipes:', error);
+    console.error('Error fetching IDs:', error);
   } else {
-    res.send(results);
-      console.log('Recipes:', results);
+    console.log('IDs:', results);
   }
- });
+});
+// Execute the query using your database connection
+// Assuming you're using MySQL
+// mysqlConnection.query(query, (error, results, fields) => {
+//   if (error) {
+//       console.error('Error fetching recipes:', error);
+//   } else {
+//     res.send(results);
+//       console.log('Recipes:', results);
+//   }
+//  });
 });
 
 
