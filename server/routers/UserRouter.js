@@ -20,15 +20,14 @@ userRouter.get("/getUsersExist/:email/:password", (req, res) => {
 userRouter.post("/register", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
-  const age = req.body.age;
   const name = req.body.name;
 
-  if (!name || !age || !email || !password) {
+  if (!name || !email || !password) {
     return res.status(400).send({ message: 'Please fill all inputs' });
   }
 
-  const sql = `INSERT INTO users (email, password, age, name) VALUES (?, ?, ?, ?);`;
-  mysqlConnection.query(sql, [email, password, age, name], (err) => {
+  const sql = `INSERT INTO users (email, password, name) VALUES ( ?, ?, ?);`;
+  mysqlConnection.query(sql, [email, password, name], (err) => {
     if (!err) res.send("POST User details successfully");
     else {
       console.log(err);
