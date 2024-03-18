@@ -19,7 +19,6 @@ app.use((req, res, next) => {
   next();
 });
 
-
 const RecipiesRouter = require('./server/routers/RecipiesRouter');
 app.use('/recipes', RecipiesRouter);
 
